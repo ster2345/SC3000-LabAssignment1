@@ -204,7 +204,10 @@ def main():
     start_node = '1'
     end_node = '50'
     energy_budget = 287932
-
+    print("====================================")
+    print("SC3000 Lab Assignment 1")
+    print("Part 1: Graph Search Algorithms")
+    print("====================================\n")
     # run task 1:
     result1 = task1_UCS(start_node, end_node)
 
@@ -227,5 +230,10 @@ def main():
 
 if __name__ == "__main__":
     main()
+print("\n==============================")
+print("Running Part 2 (Reinforcement Learning)")
+print("==============================\n")
 
+import runpy
+runpy.run_module("part2", run_name="__main__")
  
