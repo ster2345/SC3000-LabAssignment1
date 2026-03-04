@@ -140,6 +140,8 @@ def task2_UCS(start, end, energy_budget):
     path = reconstruct_path(parent, start, end)
     distance, energy = calculate_path_stats(path)
     return path, distance, energy
+
+
 ## TASK 3 --> using A* 
 def heuristic(node, goal):
     x1, y1 = Coord[node]
@@ -200,6 +202,7 @@ def task3_Astar(start, end, energy_budget):
     distance, energy = calculate_path_stats(path)
 
     return path, distance, energy
+
 def main():
     start_node = '1'
     end_node = '50'
