@@ -1,6 +1,6 @@
 import json
 import heapq
-
+import math
 
 with open('G.json', 'r') as f:
    G = json.load(f)
@@ -140,8 +140,66 @@ def task2_UCS(start, end, energy_budget):
     path = reconstruct_path(parent, start, end)
     distance, energy = calculate_path_stats(path)
     return path, distance, energy
+## TASK 3 --> using A* 
+def heuristic(node, goal):
+    x1, y1 = Coord[node]
+    x2, y2 = Coord[goal]
+    return math.sqrt((x1 - x2)**2 + (y1 - y2)**2)
 
+def task3_Astar(start, end, energy_budget):
 
+    frontier = [(heuristic(start, end), 0, 0, start)]  # (f, distance, energy, node)
+
+    distance_to = {start: 0}
+    parent = {start: None}
+
+    explored = {}
+
+    while frontier:
+
+        f, current_dist, current_energy, current_node = heapq.heappop(frontier)
+
+        if current_node in explored:
+            if explored[current_node] <= current_energy:
+                continue
+
+        explored[current_node] = current_energy
+
+        if current_node == end:
+            break
+
+        if current_node not in G:
+            continue
+
+        for neighbor in G[current_node]:
+
+            edge = f"{current_node},{neighbor}"
+
+            if edge not in Dist or edge not in Cost:
+                continue
+
+            new_dist = current_dist + Dist[edge]
+            new_energy = current_energy + Cost[edge]
+
+            if new_energy > energy_budget:
+                continue
+
+            if neighbor not in distance_to or new_dist < distance_to[neighbor]:
+
+                distance_to[neighbor] = new_dist
+                parent[neighbor] = current_node
+
+                f = new_dist + heuristic(neighbor, end)
+
+                heapq.heappush(frontier, (f, new_dist, new_energy, neighbor))
+
+    if end not in parent:
+        return None
+
+    path = reconstruct_path(parent, start, end)
+    distance, energy = calculate_path_stats(path)
+
+    return path, distance, energy
 def main():
     start_node = '1'
     end_node = '50'
@@ -160,6 +218,12 @@ def main():
     if result2:
         path2, dist2, energy2 = result2
         print_result(2, path2, dist2, energy2)  
+    # run task 3:
+    result3 = task3_Astar(start_node, end_node, energy_budget)
+
+    if result3:
+        path3, dist3, energy3 = result3
+        print_result(3, path3, dist3, energy3)
 
 if __name__ == "__main__":
     main()
